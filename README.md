@@ -1,5 +1,5 @@
 # yuketangHelperBUULite
-雨课堂刷课脚本
+雨课堂刷课脚本 forked from [Cat1007/yuketangHelperSCUTLite](https://github.com/Cat1007/yuketangHelperSCUTLite)
 
 20241101更新：更新多线程刷课，更新扫码快速登录
 

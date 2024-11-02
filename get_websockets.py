@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# version 1
+# developed by MuWinds
 import json
 import websocket
 import threading

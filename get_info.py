@@ -27,7 +27,7 @@ def getCookies(domain):
     verify_header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
         'Content-Type': 'application/json',
-        'Cookie': 'university_id=3325;platform_id=3;xtbz=cloud;platform_type=1;JG_d651262356d93f6497b466bc1_PV='+u_timestamp+"|"+str((round(time.time()*1000))),
+        'Cookie': 'university_id=3325;platform_id=3;xtbz=cloud;platform_type=1;',
         'Origin': 'https://'+domain,
         'Platform-Id':'3',
         'University-Id': str(university_id),

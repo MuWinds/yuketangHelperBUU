@@ -13,6 +13,7 @@ def getUniversityId(domain):
     }
     response = requests.get(url=url, headers=headers).json()
     data = response['data']
+    print(data['university_id'])
     return data['university_id'],str((round(time.time()*1000)))
 def getWebSocketInfo(domain):
     ws = get_websockets.WebSocketQrcode()
@@ -45,6 +46,7 @@ def getCookies(domain):
     }
     response = requests.post(verify_url, json=verify_form, headers=verify_header)
     cookie = response.headers.get('Set-Cookie')
+    print(cookie)
     return cookie
 def extract_specific_cookies(cookie_string):
     cookies = {}
@@ -55,6 +57,7 @@ def extract_specific_cookies(cookie_string):
         if '=' in key_value:
             key, value = key_value.split('=', 1)
             cookies[key] = value
-
+    print(cookies.get('csrftoken'))
+    print(cookies.get('sessionid'))
     # 返回特定的cookie
     return cookies.get('csrftoken'),cookies.get('sessionid')

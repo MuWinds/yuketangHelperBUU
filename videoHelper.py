@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # version 4
 # developed by zk chen
+# developed by MuWinds
 import random
 import time
 import requests
@@ -122,7 +123,7 @@ def one_video_watcher(video_id, video_name, cid, user_id, classroomid, skuid):
             if tmp_rate is None:
                 return 0
             val = str(tmp_rate)
-            print("学习进度为：\t" + str(format(float(val)* 100,'.2f') ) + "%")
+            print(video_name+"学习进度为：\t" + str(format(float(val)* 100,'.2f') ) + "%")
             time.sleep(2)
         except Exception as e:
             print(e.__str__())

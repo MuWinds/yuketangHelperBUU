@@ -14,7 +14,7 @@ def getUniversityId(domain):
     response = requests.get(url=url, headers=headers).json()
     data = response['data']
     print(data['university_id'])
-    return data['university_id'],str((round(time.time()*1000)))
+    return data['university_id']
 def getWebSocketInfo(domain):
     ws = get_websockets.WebSocketQrcode()
     message  = ws.run(domain)
@@ -25,7 +25,7 @@ def getCookies(domain):
         ck_file = open("cookies.txt","r")
         cookie = ck_file.read()
     else:
-        university_id,u_timestamp = getUniversityId(domain)
+        university_id = getUniversityId(domain)
         login_message = getWebSocketInfo(domain)
         #message转json
         message = json.loads(login_message)
@@ -34,7 +34,6 @@ def getCookies(domain):
         verify_url = "https://"+domain+"/edu_admin/account/login/verify-origin-system-bind?term=latest&uv_id="+str(university_id)
         verify_header = {
             'referer':'https://'+domain+'/pro/portal/home/',
-            'sec-ch-ua': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
             'Content-Type': 'application/json',
             'Cookie': 'university_id=3325;platform_id=3;xtbz=cloud;platform_type=1;',

@@ -12,7 +12,7 @@ import threading
 domain = input('输入雨课堂域名：(BUU输入buu.yuketang.cn)')
 cookies = get_info.getCookies(domain)
 csrftoken,sessionid = get_info.extract_specific_cookies(cookies);  # 需改成自己的
-university_id,_ = get_info.getUniversityId(domain)  # 需改成自己的
+university_id = get_info.getUniversityId(domain)  # 需改成自己的
 university_id = str(university_id)#转成字符串
 learning_rate = 20  # 学习速率 改成原脚本速率
 

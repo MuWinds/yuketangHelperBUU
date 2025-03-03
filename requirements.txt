@@ -1,3 +1,4 @@
 qrcode==8.0
 Requests==2.32.3
+Pillow
 websocket_client==1.8.0

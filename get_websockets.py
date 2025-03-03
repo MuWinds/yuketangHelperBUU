@@ -4,7 +4,6 @@
 import json
 import websocket
 import threading
-import time
 import qrcode
 import io
 import os

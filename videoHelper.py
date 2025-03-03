@@ -9,7 +9,7 @@ import re
 import json
 import get_info
 import threading
-domain = input('输入雨课堂域名：')
+domain = input('输入雨课堂域名：(BUU输入buu.yuketang.cn)')
 cookies = get_info.getCookies(domain)
 csrftoken,sessionid = get_info.extract_specific_cookies(cookies);  # 需改成自己的
 university_id,_ = get_info.getUniversityId(domain)  # 需改成自己的
@@ -38,7 +38,6 @@ leaf_type = {
     "recommend": 3,
     "discussion": 4
 }
-
 
 def one_video_watcher(video_id, video_name, cid, user_id, classroomid, skuid):
     video_id = str(video_id)

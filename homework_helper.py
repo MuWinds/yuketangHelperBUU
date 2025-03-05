@@ -42,6 +42,35 @@ leaf_type = {
     "discussion": 4
 }
 
+def get_encrypt_string(s, ttf):
+    # 匹配加密部分
+    # 假设data_str是用户提供的原始JSON字符串
+    # 解析为字典
+    data_dict = json.loads(s)
+    res = requests.get(ttf,headers=headers)
+    # 递归遍历字典中的所有字符串值
+    def find_encrypted_text(obj):
+        results = []
+        if isinstance(obj, dict):
+            for value in obj.values():
+                results.extend(find_encrypted_text(value))
+        elif isinstance(obj, list):
+            for item in obj:
+                results.extend(find_encrypted_text(item))
+        elif isinstance(obj, str):
+            # 应用正则表达式
+            pattern = r'<span class="xuetangx-com-encrypted-font">(.*?)</span>'
+            matches = re.findall(pattern, obj)
+            results.extend(matches)
+        return results
+    matches = find_encrypted_text(data_dict)
+    for enc_str in matches:
+        dec_str = decrypt_text(enc_str,res.content,"mapping_file.json")
+        s = s.replace(f'<span class="xuetangx-com-encrypted-font">{enc_str}</span>', ''.join(dec_str))
+        print(dec_str)
+        print(enc)
+    return format_string(s)
+
 def do_homework(submit_url, classroom_id, course_sign, course_name):
     # second, need to get homework ids
     get_homework_ids = "https://"+domain+"/mooc-api/v1/lms/learn/course/chapter?cid="+str(classroom_id)+"&term=latest&uv_id="+university_id+"&sign="+course_sign

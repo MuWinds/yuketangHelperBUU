@@ -11,10 +11,11 @@ import get_info
 import threading
 domain = input('输入雨课堂域名：(BUU输入buu.yuketang.cn)')
 cookies = get_info.getCookies(domain)
+print(cookies)
 csrftoken,sessionid = get_info.extract_specific_cookies(cookies);  # 需改成自己的
 university_id = get_info.getUniversityId(domain)  # 需改成自己的
 university_id = str(university_id)#转成字符串
-learning_rate = 20  # 学习速率 改成原脚本速率
+learning_rate = 12  # 学习速率 改成原脚本速率
 
 # 以下字段不用改，下面的代码也不用改动
 user_id = ""
@@ -22,7 +23,7 @@ user_id = ""
 headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
     'Content-Type': 'application/json',
-    'Cookie': 'csrftoken=' + csrftoken + '; sessionid=' + sessionid + '; university_id=' + str(university_id) + '; platform_id=3',
+    'Cookie': 'csrftoken=' + csrftoken + '; sessionid=' + sessionid + '; university_id=' + university_id + '; platform_id=3',
     'x-csrftoken': csrftoken,
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
@@ -205,7 +206,7 @@ if __name__ == "__main__":
 
     flag = True
     while(flag):
-        number = input("你想刷哪门课呢？请输入编号。输入0表示全部课程都刷一遍\n")
+        number = input("你想刷哪门课呢?请输入编号。输入0表示全部课程都刷一遍\n")
         # 输入不合法则重新输入
         if not (number.isdigit()) or int(number) > len(courses):
             print("输入不合法！")

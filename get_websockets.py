@@ -66,15 +66,4 @@ def print_qrcode(qr_data):
     )
     qr.add_data(qr_data)
     qr.make(fit=True)
-
-    img = qr.make_image(fill='black', back_color='white')
-
-    # 将二维码图像保存到内存
-    img_buffer = io.BytesIO()
-    img.save(img_buffer, format='PNG')
-    img_buffer.seek(0)
-
-    # 打印二维码
-    os.system('cls' if os.name == 'nt' else 'clear')  # 清屏
-    print("QRCode:")
-    img.show()
+    qr.print_ascii(out=None,tty=False,invert=False)

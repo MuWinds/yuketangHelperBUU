@@ -1,7 +1,9 @@
 # yuketangHelperBUULite
-雨课堂刷课脚本 forked from [Cat1007/yuketangHelperSCUTLite](https://github.com/Cat1007/yuketangHelperSCUTLite)
+雨课堂刷课脚本 fork from [Cat1007/yuketangHelperSCUTLite](https://github.com/Cat1007/yuketangHelperSCUTLite)
 
 20241101更新：更新多线程刷课，更新扫码快速登录
+
+20250703更新：更新AI答题，开源
 
 #### 说点什么：
 
@@ -33,8 +35,10 @@ https://github.com/heyblackC/yuketangHelper
 
 4. 安装vscode以及vscode的python插件，并根据提示使用pip安装所需要的包
 
-5. 右上角绿色三角点击运行
+5. 安装依赖：pip install -r requirements.txt
 
-6. 运行时输入雨课堂网站域名，输入完后会弹出微信登录二维码，扫码登录后按提示输入对应的课程编号并回车
+6. 右上角绿色三角点击运行
 
-7. 直接爽到起飞🛫️
+7. 运行时输入雨课堂网站域名，输入完后会弹出微信登录二维码窗口（系统需要安装图像查看的软件），扫码登录后按提示输入对应的课程编号并回车
+
+8. 直接爽到起飞🛫️

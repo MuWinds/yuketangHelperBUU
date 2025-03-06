@@ -5,8 +5,11 @@ import requests
 import time
 import get_websockets
 import json
+
+
 def getUniversityId(domain):
-    url = "https://"+domain+"/edu_admin/get_custom_university_info/?current=1&_="+str((round(time.time()*1000)))
+    url = "https://"+domain+"/edu_admin/get_custom_university_info/?current=1&_=" + \
+        str((round(time.time()*1000)))
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36',
         'Content-Type': 'application/json',
@@ -15,45 +18,56 @@ def getUniversityId(domain):
     data = response['data']
     print(data['university_id'])
     return data['university_id']
+
+
 def getWebSocketInfo(domain):
     ws = get_websockets.WebSocketQrcode()
-    message  = ws.run(domain)
+    message = ws.run(domain)
     return message
+
+
 def getCookies(domain):
-    is_cached = input("是否用原来的cookies?是输入1(否则会将原来的cookies以新获得cookies覆盖)")
-    if(is_cached=="1"):
-        ck_file = open("cookies.txt","r")
+    is_cached = input("是否用已有cookies?是输入1(否则会将原来的cookies以新获得cookies覆盖)")
+    if (is_cached == "1"):
+        filename = input("请输入cookies文件名:")
+        ck_file = open(filename+".txt", "r")
         cookie = ck_file.read()
     else:
         university_id = getUniversityId(domain)
         login_message = getWebSocketInfo(domain)
-        #message转json
+        # message转json
         message = json.loads(login_message)
         auth_info = message['Auth']
         user_id = message['UserID']
-        verify_url = "https://"+domain+"/edu_admin/account/login/verify-origin-system-bind?term=latest&uv_id="+str(university_id)
+        verify_url = "https://"+domain + \
+            "/edu_admin/account/login/verify-origin-system-bind?term=latest&uv_id=" + \
+            str(university_id)
         verify_header = {
-            'referer':'https://'+domain+'/pro/portal/home/',
+            'referer': 'https://'+domain+'/pro/portal/home/',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
             'Content-Type': 'application/json',
             'Cookie': 'university_id=3325;platform_id=3;xtbz=cloud;platform_type=1;',
             'Origin': 'https://'+domain,
-            'Platform-Id':'3',
+            'Platform-Id': '3',
             'University-Id': str(university_id),
             'Terminal-Type': 'web',
             'X-Client': 'web',
             'X-Csrftoken': 'undefined',
-            'Xtbz':'cloud',
+            'Xtbz': 'cloud',
         }
         verify_form = {
             'auth': auth_info,
             'origin_user_id': str(user_id)
         }
-        response = requests.post(verify_url, json=verify_form, headers=verify_header)
+        response = requests.post(
+            verify_url, json=verify_form, headers=verify_header)
         cookie = response.headers.get('Set-Cookie')
-        ck_write = open("cookies.txt","w")
+        filename = input("请输入cookies文件名:")
+        ck_write = open(filename+".txt", "w")
         ck_write.write(cookie)
     return cookie
+
+
 def extract_specific_cookies(cookie_string):
     cookies = {}
     # 将cookie字符串分割成单独的cookie条目
@@ -66,4 +80,4 @@ def extract_specific_cookies(cookie_string):
     print(cookies.get('csrftoken'))
     print(cookies.get('sessionid'))
     # 返回特定的cookie
-    return cookies.get('csrftoken'),cookies.get('sessionid')
+    return cookies.get('csrftoken'), cookies.get('sessionid')

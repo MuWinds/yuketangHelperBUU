@@ -127,4 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-cookies.txt
+*.txt
+openai_test.py

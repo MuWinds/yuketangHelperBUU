@@ -1,4 +1,10 @@
-qrcode==8.0
-Requests==2.32.3
+qrcode
+Requests
 Pillow
-websocket_client==1.8.0
+fontTools
+hashlib
+websocket_client
+lxml
+bs4
+websocket
+openai

@@ -1,9 +1,9 @@
-# yuketangHelperBUULite
+# yuketangHelperBUU（原yuketangHelperBUULite）
 雨课堂刷课脚本 fork from [Cat1007/yuketangHelperSCUTLite](https://github.com/Cat1007/yuketangHelperSCUTLite)
 
 20241101更新：更新多线程刷课，更新扫码快速登录
 
-20250703更新：更新AI答题，开源
+20250703更新：更新AI答题，这个仓库再也不用带Lite后缀了 xD
 
 #### 说点什么：
 

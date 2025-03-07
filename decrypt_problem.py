@@ -104,28 +104,30 @@ class Decrypt_problem:
         modified_data = replace_encrypted_text(data)
         # 将修改后的数据转换回JSON字符串
         modified_s = json.dumps(modified_data, ensure_ascii=False)
-        return modified_s
-
-def remove_html_tags(text):
-    """使用 Beautiful Soup 移除字符串中的HTML标签"""
-    soup = BeautifulSoup(text, 'lxml')  # 使用 lxml 解析器
-    return soup.get_text()
+        return format_string(modified_s)
 
 
-def _remove_html_tags_recursive(item):
-    """递归处理JSON数据结构移除HTML标签"""
-    if isinstance(item, dict):
-        return {key: _remove_html_tags_recursive(value) for key, value in item.items()}
-    elif isinstance(item, list):
-        return [_remove_html_tags_recursive(element) for element in item]
-    elif isinstance(item, str):
-        return remove_html_tags(item)
+def clean_string(text):
+    """处理字符串:去除HTML标签和换行符"""
+    if not isinstance(text, str):
+        return text
+
+    # 使用BeautifulSoup去除HTML标签
+    soup = BeautifulSoup(text, "html.parser")
+    cleaned = soup.get_text(separator=" ", strip=True)
+
+    # 去除换行符和连续空格
+    cleaned = cleaned.replace("\n", " ").replace("\r", "")
+    return " ".join(cleaned.split())  # 合并多个空格
+
+
+def format_string(obj):
+    """递归清理JSON数据结构"""
+    if isinstance(obj, dict):
+        return {k: format_string(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [format_string(elem) for elem in obj]
+    elif isinstance(obj, str):
+        return clean_string(obj)
     else:
-        return item
-
-
-def remove_html_tag(json_string):
-    """从JSON字符串中删除HTML标签的主函数"""
-    data = json.loads(json_string)
-    modified_data = _remove_html_tags_recursive(data)
-    return json.dumps(modified_data, ensure_ascii=False)
+        return obj

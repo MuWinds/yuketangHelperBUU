@@ -2,9 +2,7 @@ qrcode
 Requests
 Pillow
 fontTools
-hashlib
 websocket_client
 lxml
 bs4
-websocket
 openai

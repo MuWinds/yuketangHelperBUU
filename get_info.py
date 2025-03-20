@@ -6,6 +6,11 @@ import time
 import get_websockets
 import json
 
+def clear_cmdline_x10():                                    #调用此函数生成10行空格用于清屏
+    for _ in range(10):
+        print(" ")
+
+
 
 def getUniversityId(domain):
     url = "https://"+domain+"/edu_admin/get_custom_university_info/?current=1&_=" + \
@@ -27,7 +32,37 @@ def getWebSocketInfo(domain):
 
 
 def getCookies(domain):
-    is_cached = input("是否用已有cookies?是输入1(否则会将原来的cookies以新获得cookies覆盖)")
+    
+    clear_cmdline_x10()
+    print("+-----+-----+-----+-----+-----+-----+")
+    print("                                     ")
+    print("        是否使用已有cookies?          ")
+    print("                                     ")
+    print("           #cookies.txt#             ")
+    print("                                     ")
+    print("            [1]  使用                ")
+    print("                                     ")
+    print("            [0] 不使用               ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("+-----+-----+-----+-----+-----+-----+")
+    cookies_option = int(input("请输入选项(0-4):"))
+
+    match cookies_option:
+        case 0:
+            is_cached = 0
+        case 1:
+            is_cached = 1
+        case _:
+            print("+-----+-----+-----+-----+-----+-----+")
+            print("                                     ")
+            print("         无效的选项！！！              ")
+            print("    已缺省为不使用原有cookies          ")
+            print("                                     ")
+            print("+-----+-----+-----+-----+-----+-----+")
+
     if (is_cached == "1"):
         filename = input("请输入cookies文件名:")
         ck_file = open(filename+".txt", "r")

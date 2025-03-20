@@ -5,7 +5,42 @@ import json
 import get_info
 from videoHelper import videoHelper
 from homeworkHelper import homeworkHelper
-domain = input('输入雨课堂域名：(BUU输入buu.yuketang.cn)')
+
+def clear_cmdline_x10():                                    #调用此函数生成10行空格用于清屏
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+    print("                                     ")
+
+
+clear_cmdline_x10()
+print("+-----+-----+-----+-----+-----+-----+")
+print("    yuketangHelper  Console MENU    ")
+print("                                     ")
+print("          请选择雨课堂网址            ")
+print("                                     ")
+print("   [1] BUU - 北京联合大学雨课堂        ")
+print("         buu.yuketang.cn             ")
+print("                                     ")
+print("   [0]      手动输入网址              ")
+print("                                     ")
+print("                                     ")
+print("+-----+-----+-----+-----+-----+-----+")
+domain_option = int(input("请输入选项(0-4):"))
+
+match domain_option:
+    case 0:
+        domain = input('输入雨课堂域名：(例如xxx.yuketang.cn)')
+    case 1:
+        domain = ("buu.yuketang.cn")
+
+
 cookies = get_info.getCookies(domain)
 csrftoken, sessionid = get_info.extract_specific_cookies(cookies)  # 需改成自己的
 university_id = get_info.getUniversityId(domain)  # 需改成自己的

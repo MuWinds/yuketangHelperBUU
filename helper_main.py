@@ -6,20 +6,8 @@ import get_info
 from videoHelper import videoHelper
 from homeworkHelper import homeworkHelper
 
-def clear_cmdline_x10():                                    #调用此函数生成10行空格用于清屏
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
 
-
-clear_cmdline_x10()
+get_info.clear_cmdline_x10()
 print("+-----+-----+-----+-----+-----+-----+")
 print("    yuketangHelper  Console MENU    ")
 print("                                     ")
@@ -27,6 +15,9 @@ print("          请选择雨课堂网址            ")
 print("                                     ")
 print("   [1] BUU - 北京联合大学雨课堂        ")
 print("         buu.yuketang.cn             ")
+print("                                     ")
+print("   [2] USTC - 中国科学技术大学雨课堂   ")
+print("         ustc.yuketang.cn            ")
 print("                                     ")
 print("   [0]      手动输入网址              ")
 print("                                     ")
@@ -39,6 +30,8 @@ match domain_option:
         domain = input('输入雨课堂域名：(例如xxx.yuketang.cn)')
     case 1:
         domain = ("buu.yuketang.cn")
+    case 2:
+        domain = ("ustc.yuketang.cn")
 
 
 cookies = get_info.getCookies(domain)

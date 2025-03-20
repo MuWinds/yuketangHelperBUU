@@ -7,16 +7,10 @@ import get_websockets
 import json
 
 def clear_cmdline_x10():                                    #调用此函数生成10行空格用于清屏
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
-    print("                                     ")
+    for _ in range(10):
+        print(" ")
+
+
 
 def getUniversityId(domain):
     url = "https://"+domain+"/edu_admin/get_custom_university_info/?current=1&_=" + \

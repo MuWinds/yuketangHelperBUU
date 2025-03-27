@@ -63,7 +63,7 @@ def getCookies(domain):
             print("                                     ")
             print("+-----+-----+-----+-----+-----+-----+")
 
-    if (is_cached == "1"):
+    if (is_cached == 1):
         filename = input("请输入cookies文件名:")
         ck_file = open(filename+".txt", "r")
         cookie = ck_file.read()

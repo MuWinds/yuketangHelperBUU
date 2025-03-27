@@ -1,9 +1,17 @@
 # yuketangHelperBUU（原yuketangHelperBUULite）
 雨课堂刷课脚本 fork from [Cat1007/yuketangHelperSCUTLite](https://github.com/Cat1007/yuketangHelperSCUTLite)
+雨课堂刷课脚本 fork again from [MuWinds/yuketangHelperBUU](https://github.com/MuWinds/yuketangHelperBUU)
 
 20241101更新：更新多线程刷课，更新扫码快速登录
 
 20250307更新：更新AI答题，这个仓库再也不用带Lite后缀了 xD
+
+20250327更新：
+    *加入了cmdline_menu菜单面板(仓库地址:https://github.com/EVGA2048/cmdline_menu)
+    *将部分英文提示更改为简体中文
+    *在消息前加入类型(info warn fatal)
+    *通过输入选项省略输入地址和文件名的过程，优化操作效率
+
 
 #### 说点什么：
 

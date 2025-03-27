@@ -76,8 +76,7 @@ class homeworkHelper:
             dictionary = json.loads(id_response.text)
             font_ttf = dictionary['data']['font']
             decrypt = Decrypt_problem(header=self.headers)
-            decrypted_str = decrypt.get_encrypt_string(
-                id_response.text, font_ttf)
+            decrypted_str = decrypt.get_encrypt_string(id_response.text, font_ttf)
             dictionary = json.loads(decrypted_str)
             # 提取题目并格式化为字典结构
             questions_dict = {}  # 改用字典存储

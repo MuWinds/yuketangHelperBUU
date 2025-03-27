@@ -103,8 +103,8 @@ class Decrypt_problem:
         # 执行递归替换
         modified_data = replace_encrypted_text(data)
         # 将修改后的数据转换回JSON字符串
-        modified_s = json.dumps(modified_data, ensure_ascii=False)
-        return format_string(modified_s)
+        modified_s = json.dumps(format_string(modified_data), ensure_ascii=False)
+        return modified_s
 
 
 def clean_string(text):

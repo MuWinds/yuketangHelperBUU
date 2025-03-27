@@ -3,30 +3,44 @@ import requests
 import re
 import json
 import get_info
+import cmdline_menu
 from videoHelper import videoHelper
 from homeworkHelper import homeworkHelper
 
 
-get_info.clear_cmdline_x10()
-print("+-----+-----+-----+-----+-----+-----+")
-print("    yuketangHelper  Console MENU    ")
-print("                                     ")
-print("          请选择雨课堂网址            ")
-print("                                     ")
-print("   [1] BUU - 北京联合大学雨课堂        ")
-print("         buu.yuketang.cn             ")
-print("                                     ")
-print("   [2] USTC - 中国科学技术大学雨课堂   ")
-print("         ustc.yuketang.cn            ")
-print("                                     ")
-print("   [0]      手动输入网址              ")
-print("                                     ")
-print("                                     ")
-print("+-----+-----+-----+-----+-----+-----+")
-domain_option = int(input("请输入选项(0-4):"))
+#初始化cmdline_menu
+menuType = "medium"
+borderStyle = "dashed"
+cmdline_menu.initialize_menu_type(menuType , borderStyle)
+
+cmdline_menu.clear_cmdline_x10()
+cmdline_menu.drawBorder(menuType , borderStyle)
+cmdline_menu.singlespace()
+cmdline_menu.raw_text("yuketangHelper MENU")
+cmdline_menu.singlespace()
+cmdline_menu.welcome_panel("今天想要刷谁的课呢？")
+cmdline_menu.singlespace()
+cmdline_menu.raw_text("请选择雨课堂网址")
+cmdline_menu.singlespace()
+cmdline_menu.create_option("1","BUU - 北京联合大学雨课堂")
+cmdline_menu.raw_text("buu.yuketang.cn")
+cmdline_menu.singlespace()
+cmdline_menu.create_option("2","USTC - 中国科学技术大学雨课堂")
+cmdline_menu.raw_text("ustc.yuketang.cn")
+cmdline_menu.singlespace()
+cmdline_menu.create_option("0","手动输入网址")
+cmdline_menu.singlespace()
+cmdline_menu.singlespace()
+cmdline_menu.drawBorder(menuType , borderStyle)
+print("请输入选项(0-2):")
+
+
+domain_option = cmdline_menu.read_selection()
 
 match domain_option:
     case 0:
+        cmdline_menu.clear_cmdline_x10()
+        cmdline_menu.clear_cmdline_x10()
         domain = input('输入雨课堂域名：(例如xxx.yuketang.cn)')
     case 1:
         domain = ("buu.yuketang.cn")
@@ -59,7 +73,7 @@ if __name__ == "__main__":
         user_id = re.search(r'"user_id":(.+?)}',
                             id_response.text).group(1).strip()
     except:
-        print("也许是网路问题，获取不了user_id,请试着重新运行")
+        print("| FATAL |  " + "也许是网路问题，获取不了user_id,请试着重新运行")
         raise Exception(
             "也许是网路问题，获取不了user_id,请试着重新运行!!! please re-run this program!")
 
@@ -80,14 +94,17 @@ if __name__ == "__main__":
                 "course_id": ins["course_id"]
             })
     except Exception as e:
-        print("fail while getting classroom_id!!! please re-run this program!")
+        print("获取教室id时出现问题!!! 请重新运行此程序!")
         raise Exception(
-            "fail while getting classroom_id!!! please re-run this program!")
-
+            "获取教室id时出现问题!!! 请重新运行此程序!")
+    
+    
     # 显示用户提示
+    cmdline_menu.drawBorder(menuType , borderStyle)
     for index, value in enumerate(courses):
-        print("编号：" + str(index + 1) + " 课名：" + str(value["course_name"]))
+        cmdline_menu.create_option(str(index + 1) , str(value["course_name"]))
 
+    cmdline_menu.drawBorder(menuType , borderStyle)
     flag = True
     while (flag):
         user_info_url = "https://"+domain + "/edu_admin/get_user_basic_info/"
@@ -95,9 +112,9 @@ if __name__ == "__main__":
         try:
             user_info = json.loads(user_info_r.text)["data"]['user_info']
             user_realname = user_info["name"]
-            print("欢迎您，" + user_realname)
+            print("欢迎，" + user_realname)
         except:
-            print("也许是网路问题,获取不了user_info,请试着重新运行")
+            print("| FATAL |  " + "也许是网路问题,获取不了user_info,请试着重新运行")
         number = input("你想刷哪门课呢?请输入编号。输入0表示全部课程都刷一遍\n")
         # 输入不合法则重新输入
         video_helper = videoHelper(
@@ -106,7 +123,17 @@ if __name__ == "__main__":
             domain, cookies, user_id, university_id, headers
         )
         if not (number.isdigit()) or int(number) > len(courses):
-            print("输入不合法！")
+            cmdline_menu.clear_cmdline_x10()
+            cmdline_menu.clear_cmdline_x10()
+            cmdline_menu.drawBorder("small" , borderStyle)
+            cmdline_menu.singlespace()
+            cmdline_menu.singlespace()
+            cmdline_menu.raw_text("输入不合法！")
+            cmdline_menu.singlespace()
+            cmdline_menu.singlespace()
+            cmdline_menu.drawBorder("small" , borderStyle)
+            print("请按任意键继续......")
+            _ = input()
             continue
         elif int(number) == 0:
             flag = False    # 输入合法则不需要循环
@@ -136,4 +163,12 @@ if __name__ == "__main__":
                                               user_id, classroom_id, sku_id)
             homework_helper.do_homework(courses[number]["classroom_id"],
                                         courses[number]["course_sign"], courses[number]["course_name"])
-        print("搞定啦")
+        cmdline_menu.clear_cmdline_x10()
+        cmdline_menu.clear_cmdline_x10()
+        cmdline_menu.drawBorder("small" , borderStyle)
+        cmdline_menu.singlespace()
+        cmdline_menu.singlespace()
+        cmdline_menu.raw_text("搞定啦")
+        cmdline_menu.singlespace()
+        cmdline_menu.singlespace()
+        cmdline_menu.drawBorder("small" , borderStyle)

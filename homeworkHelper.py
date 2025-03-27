@@ -53,7 +53,7 @@ class homeworkHelper:
                     else:
                         if j['leaf_type'] == self.leaf_type["homework"]:
                             homework_ids.append(j["id"])
-            print(course_name+"共有"+str(len(homework_ids))+"个作业喔！")
+            print("| INFO | " + course_name+"共有"+str(len(homework_ids))+"个作业喔！")
         except:
             print("fail while getting homework_ids!!! please re-run this program!")
             raise Exception(
@@ -85,7 +85,7 @@ class homeworkHelper:
                 problem_id = problem["problem_id"]  # 提取题目ID作为键
                 content = problem["content"]
                 if problem['user']['my_count'] >= problem['user']['count']:
-                    print("该问题已经超过做题上限了，所以不得不跳过啦~")
+                    print("| WARN | " +"该问题已经超过做题上限了，所以不得不跳过啦~")
                     continue
                 options = [
                     f"{opt['key']}. {opt['value']}" for opt in content["Options"]]
@@ -95,7 +95,7 @@ class homeworkHelper:
 
             # 回答问题
             for pid, q in questions_dict.items():
-                print(f"问题: {q}")
+                print("| INFO | " + f"问题: {q}")
 
                 openai_solve = OpenAI_ask()
                 answer = openai_solve.get_answer(q)
@@ -122,20 +122,20 @@ class homeworkHelper:
                                 r'Expected available in (\d+\.?\d*) seconds\.', response_json['detail'])
                             if delay_match:
                                 delay_time = float(delay_match.group(1))
-                                print(f"由于网络阻塞，万恶的雨课堂，要阻塞 {delay_time} 秒")
+                                print("| WARN | " +f"由于网络阻塞，万恶的雨课堂，要阻塞 {delay_time} 秒")
                                 time.sleep(delay_time + 1)  # 等待指定时间 + 1 秒，更保险
                                 retries += 1
-                                print(f"等待结束，进行第 {retries} 次重试...")
+                                print("| WARN | " +f"等待结束，进行第 {retries} 次重试...")
                                 continue  # 继续下一次循环，即重试提交
 
                         print(response.text)  # 打印正常响应
                         break  # 提交成功，跳出重试循环
 
                     except requests.exceptions.Timeout as e:
-                        print(f"请求超时，第{retries+1}次重试...")
+                        print("| WARN | " +f"请求超时，第{retries+1}次重试...")
                         retries += 1
                         time.sleep(2 ** retries)  # 指数退避
                     except requests.exceptions.RequestException as e:  # 捕获其他请求异常
-                        print(f"请求异常: {str(e)}")
+                        print("| ERROR |" +f"请求异常: {str(e)}")
                         break  # 遇到其他请求异常，跳出重试循环，避免无限重试
-            print(dictionary["data"]["name"] + "已经完成!")
+            print("| INFO | " + dictionary["data"]["name"] + "已经完成!")

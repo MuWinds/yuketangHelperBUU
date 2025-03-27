@@ -45,10 +45,10 @@ class videoHelper:
         except:
             pass
         if if_completed == '1':
-            print(video_name + "已经学习完毕，跳过")
+            print("| INFO |  " + video_name + "已经学习完毕，跳过")
             return 1
         else:
-            print(video_name + "，尚未学习，现在开始自动学习")
+            print("| INFO |  " + video_name + "，尚未学习，现在开始自动学习")
             time.sleep(2)
 
         # 默认为0（即还没开始看）
@@ -103,9 +103,9 @@ class videoHelper:
             try:
                 delay_time = re.search(
                     r'Expected available in(.+?)second.', r.text).group(1).strip()
-                print("由于网络阻塞，万恶的雨课堂，要阻塞" + str(delay_time) + "秒")
+                print("| WARN |" + "  由于网络阻塞，万恶的雨课堂，要阻塞" + str(delay_time) + "秒")
                 time.sleep(float(delay_time) + 0.5)
-                print("恢复工作啦～～")
+                print("| INFO |" + "  恢复工作啦～～")
                 submit_url = "https://"+self.domain + \
                     "/mooc-api/v1/lms/exercise/problem_apply/?term=latest&uv_id=" + self.university_id + ""
                 r = requests.post(
@@ -119,13 +119,13 @@ class videoHelper:
                 if tmp_rate is None:
                     return 0
                 val = str(tmp_rate)
-                print(video_name+"学习进度为：\t" +
+                print("| INFO |  " + video_name+"学习进度为：\t" +
                       str(format(float(val) * 100, '.2f')) + "%")
                 time.sleep(2)
             except Exception as e:
                 print(e.__str__())
                 pass
-        print("视频" + video_id + " " + video_name + "学习完成！")
+        print("| INFO |" +"  视频" + video_id + " " + video_name + "学习完成！")
         return 1
 
     def get_videos_ids(self, course_name, classroom_id, course_sign):
@@ -146,12 +146,12 @@ class videoHelper:
                         if j['leaf_type'] == leaf_type["video"]:
                             # homework_ids.append(j["id"])
                             homework_dic[j["id"]] = j["name"]
-            print(course_name + "共有" + str(len(homework_dic)) + "个作业喔！")
+            print("| INFO |  " + course_name + "共有" + str(len(homework_dic)) + "个作业喔！")
             return homework_dic
         except:
-            print("fail while getting homework_ids!!! please re-run this program!")
+            print("| FATAL |" + "  获取作业id时出错!!! 请重新运行此程序!")
             raise Exception(
-                "fail while getting homework_ids!!! please re-run this program!")
+                "| FATAL |" + "  获取作业id时出错!!! 请重新运行此程序!")
 
     def watch_videos(self, videos_id_name_dic, course_id, user_id, classroom_id, sku_id):
         for one_video in videos_id_name_dic.items():

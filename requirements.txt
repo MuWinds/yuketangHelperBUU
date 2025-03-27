@@ -6,3 +6,5 @@ websocket_client
 lxml
 bs4
 openai
+datetime
+os

@@ -168,9 +168,9 @@ def do_homework(submit_url, classroom_id, course_sign, course_name):
                         homework_ids.append(j["id"])
         print(course_name+"共有"+str(len(homework_ids))+"个作业喔！")
     except:
-        print("fail while getting homework_ids!!! please re-run this program!")
+        print("获取作业id时出现问题!!! 请重新运行程序!")
         raise Exception(
-            "fail while getting homework_ids!!! please re-run this program!")
+            "获取作业id时出现问题!!! 请重新运行程序!")
 
     # finally, we have all the data needed
     for homework in homework_ids:
@@ -223,12 +223,12 @@ if __name__ == "__main__":
                 "course_id": ins["course_id"]
             })
     except Exception as e:
-        print("fail while getting classroom_id!!! please re-run this program!")
+        print("获取教室id时出现问题!!! 请重新运行程序!")
         raise Exception(
-            "fail while getting classroom_id!!! please re-run this program!")
+            "获取教室id时出现问题!!! 请重新运行程序!")
     for index, value in enumerate(your_courses):
         print("编号："+str(index+1)+" 课名："+str(value["course_name"]))
-    number = input("你想刷哪门课呢?请输入编号。输入0表示全部课程都刷一遍\n")
+    number = input("| INFO | " +"你想刷哪门课呢?请输入编号。输入0表示全部课程都刷一遍\n")
     if int(number) == 0:
         for ins in your_courses:
             do_homework(submit_url, ins["classroom_id"],

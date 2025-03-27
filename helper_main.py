@@ -52,12 +52,11 @@ if __name__ == "__main__":
     user_id_url = "https://"+domain + "/edu_admin/check_user_session/"
     id_response = requests.get(url=user_id_url, headers=headers)
     try:
-        user_id = re.search(r'"user_id":(.+?)}',
-                            id_response.text).group(1).strip()
+        user_id = re.search(r'"user_id":(.+?)}',id_response.text).group(1).strip()
     except:
-        print("也许是网路问题，获取不了user_id,请试着重新运行")
+        print("也许是网路问题,获取不了user_id,请试着重新运行")
         raise Exception(
-            "也许是网路问题，获取不了user_id,请试着重新运行!!! please re-run this program!")
+            "也许是网路问题,获取不了user_id,请试着重新运行!!! please re-run this program!")
 
     # 然后要获取教室id
     get_classroom_id = "https://"+domain + \

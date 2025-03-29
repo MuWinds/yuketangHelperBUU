@@ -37,10 +37,11 @@ https://github.com/heyblackC/yuketangHelper
 
 5. 安装依赖：pip install -r requirements.txt
 
-6. 打开config.json和openai_ask.py文件，配置openai类型的大模型接口和system prompt，prompt示例：回答下面的问题,直接返回答案对应选项的字母,不要回复多余内容,如果不知道答案,请直接回答C,多选题回答格式是每个选项之间用一个半角逗号和一个空格分开，判断题只用返回true或false，不用回复标点符号。
+6. 打开config.json和openai_ask.py文件，配置openai类型的大模型接口（chatgpt、硅基流动都提供相关的事例是可以用的）和system prompt，prompt示例：
+   > 回答下面的问题,直接返回答案对应选项的字母,不要回复多余内容,如果不知道答案,请直接回答C,多选题回答格式是每个选项之间用一个半角逗号和一个空格分开，判断题只用返回true或false，不用回复标点符号。
 
-7. 右上角绿色三角点击运行，运行之前先将自己的雨课堂账号和微信去进行绑定
+8. 右上角绿色三角点击运行，运行之前先将自己的雨课堂账号和微信去进行绑定
 
-8. 运行时输入雨课堂网站域名（目前测试只能是各个学校的雨课堂域名可以用（比如ustc.yuketang.cn或者buu.yuketang.cn，www.yuketang.cn 是不可以的），输入完后会弹出微信登录二维码窗口（系统需要安装图像查看的软件），扫码登录后按提示输入对应的课程编号并回车
+9. 运行时输入雨课堂网站域名（目前测试只能是各个学校的雨课堂域名可以用（比如ustc.yuketang.cn或者buu.yuketang.cn，目前雨课堂的官网www.yuketang.cn 是不可以的），输入完后会弹出微信登录二维码窗口（系统需要安装图像查看的软件），扫码登录后按提示输入对应的课程编号并回车就可以刷了。
 
 8. 直接爽到起飞🛫️

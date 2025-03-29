@@ -4,7 +4,8 @@ import json
 import requests
 from io import BytesIO
 from fontTools.ttLib import TTFont
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup,MarkupResemblesLocatorWarning
+import warnings
 
 
 class Decrypt_problem:
@@ -113,6 +114,7 @@ def clean_string(text):
         return text
 
     # 使用BeautifulSoup去除HTML标签
+    warnings.filterwarnings("ignore",category=MarkupResemblesLocatorWarning)
     soup = BeautifulSoup(text, "html.parser")
     cleaned = soup.get_text(separator=" ", strip=True)
 

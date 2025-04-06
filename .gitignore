@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 *.txt
 openai_test.py
+config.json

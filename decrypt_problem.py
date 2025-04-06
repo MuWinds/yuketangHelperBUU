@@ -4,7 +4,8 @@ import json
 import requests
 from io import BytesIO
 from fontTools.ttLib import TTFont
-from bs4 import BeautifulSoup,MarkupResemblesLocatorWarning
+from bs4 import BeautifulSoup
+from bs4 import MarkupResemblesLocatorWarning
 import warnings
 
 
@@ -31,7 +32,7 @@ class Decrypt_problem:
             glyph_unicodes.setdefault(name, []).append(code)
 
         # 加载原始映射表
-        with open(mapping_file_path, 'r', encoding='utf-8') as f:
+        with open(mapping_file_path, "r", encoding="utf-8") as f:
             original_glyph_to_uni = json.load(f)
 
         obfuscated_to_original = {}
@@ -44,7 +45,7 @@ class Decrypt_problem:
                 continue
             unicode_t = unicodes[0]  # 假设取第一个码点
 
-            glyph = obfuscated_font['glyf'][glyph_name]
+            glyph = obfuscated_font["glyf"][glyph_name]
             commands = []
 
             # 构造路径命令（与生成映射文件时相同的逻辑）
@@ -55,8 +56,9 @@ class Decrypt_problem:
                 commands = [f"CONTOUR_END:{end_pts}", f"COORDS:{coords}"]
             elif glyph.isComposite():
                 # 复合字形
-                components = [f"{comp.glyphName}({comp.x},{comp.y})"
-                              for comp in glyph.components]
+                components = [
+                    f"{comp.glyphName}({comp.x},{comp.y})" for comp in glyph.components
+                ]
                 commands = ["COMPOSITE"] + components
 
             # 生成哈希
@@ -88,16 +90,15 @@ class Decrypt_problem:
                 def decrypt_match(match):
                     encrypted_str = match.group(1)
                     decrypted_chars = [
-                        chr(decryption_map.get(ord(c), ord(c)))
-                        for c in encrypted_str
+                        chr(decryption_map.get(ord(c), ord(c))) for c in encrypted_str
                     ]
-                    return ''.join(decrypted_chars)
+                    return "".join(decrypted_chars)
 
                 # 替换所有加密标签内容
                 obj = re.sub(
                     r'<span class="xuetangx-com-encrypted-font">(.*?)</span>',
                     decrypt_match,
-                    obj
+                    obj,
                 )
             return obj
 
@@ -108,13 +109,15 @@ class Decrypt_problem:
         return modified_s
 
 
+warnings.filterwarnings("ignore", category=MarkupResemblesLocatorWarning)
+
+
 def clean_string(text):
     """处理字符串:去除HTML标签和换行符"""
     if not isinstance(text, str):
         return text
 
     # 使用BeautifulSoup去除HTML标签
-    warnings.filterwarnings("ignore",category=MarkupResemblesLocatorWarning)
     soup = BeautifulSoup(text, "html.parser")
     cleaned = soup.get_text(separator=" ", strip=True)
 

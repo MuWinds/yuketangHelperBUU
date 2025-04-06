@@ -5,14 +5,6 @@ import requests
 import time
 import get_websockets
 import json
-import cmdline_menu
-
-#初始化cmdline_menu
-menuType = "medium"
-borderStyle = "dashed"
-cmdline_menu.initialize_menu_type(menuType , borderStyle)
-
-
 
 
 def getUniversityId(domain):
@@ -35,66 +27,9 @@ def getWebSocketInfo(domain):
 
 
 def getCookies(domain):
-    
-    cmdline_menu.clear_cmdline_x10()
-    cmdline_menu.clear_cmdline_x10()
-    cmdline_menu.drawBorder(menuType , borderStyle)
-    cmdline_menu.singlespace()
-    cmdline_menu.singlespace()
-    cmdline_menu.raw_text("是否使用已有cookies?")
-    cmdline_menu.singlespace()
-    cmdline_menu.raw_text("#cookies.txt#")
-    cmdline_menu.singlespace()
-    cmdline_menu.create_option("1","使用")
-    cmdline_menu.singlespace()
-    cmdline_menu.create_option("0","不使用")
-    cmdline_menu.singlespace()
-    cmdline_menu.singlespace()
-    cmdline_menu.singlespace()
-    cmdline_menu.singlespace()
-    cmdline_menu.drawBorder(menuType , borderStyle)
-    print("请输入选项(0-1):")
-    cookies_option = cmdline_menu.read_selection()
-
-    match cookies_option:
-        case 0:
-            is_cached = 0
-        case 1:
-            is_cached = 1
-        case _:
-            cmdline_menu.clear_cmdline_x10()
-            cmdline_menu.clear_cmdline_x10()
-            cmdline_menu.drawBorder(menuType , borderStyle)
-            cmdline_menu.singlespace()
-            cmdline_menu.raw_text("无效的选项！！！")
-            cmdline_menu.raw_text("已缺省为不使用原有cookies")
-            cmdline_menu.singlespace()
-            cmdline_menu.drawBorder(menuType , borderStyle)
-
-    if (is_cached == 1):
-        cmdline_menu.clear_cmdline_x10()
-        cmdline_menu.clear_cmdline_x10()
-        cmdline_menu.drawBorder(menuType , borderStyle)
-        cmdline_menu.singlespace()
-        cmdline_menu.singlespace()
-        cmdline_menu.raw_text("请输入cookies文件名")
-        cmdline_menu.singlespace()
-        cmdline_menu.singlespace()
-        cmdline_menu.create_option("1","缺省cookies.txt")
-        cmdline_menu.create_option("0","手动输入")
-        cmdline_menu.singlespace()
-        cmdline_menu.singlespace()
-        cmdline_menu.drawBorder(menuType , borderStyle)
-        cookies_option = cmdline_menu.read_selection()
-        match cookies_option:
-            case 1:
-                filename = "cookies"
-            case 0:
-                cmdline_menu.clear_cmdline_x10()
-                cmdline_menu.clear_cmdline_x10()
-                filename = input("请输入cookies文件名:")
-
-        
+    is_cached = input("是否用已有cookies?是输入1(否则会将原来的cookies以新获得cookies覆盖)")
+    if (is_cached == "1"):
+        filename = input("请输入cookies文件名:")
         ck_file = open(filename+".txt", "r")
         cookie = ck_file.read()
     else:
@@ -127,38 +62,7 @@ def getCookies(domain):
         response = requests.post(
             verify_url, json=verify_form, headers=verify_header)
         cookie = response.headers.get('Set-Cookie')
-        cmdline_menu.clear_cmdline_x10()
-        cmdline_menu.clear_cmdline_x10()
-        cmdline_menu.drawBorder(menuType , borderStyle)
-        cmdline_menu.singlespace()
-        cmdline_menu.singlespace()
-        cmdline_menu.raw_text("请输入cookies文件名")
-        cmdline_menu.singlespace()
-        cmdline_menu.singlespace()
-        cmdline_menu.create_option("1","缺省cookies.txt")
-        cmdline_menu.create_option("0","手动输入")
-        cmdline_menu.singlespace()
-        cmdline_menu.singlespace()
-        cmdline_menu.drawBorder(menuType , borderStyle)
-        cookies_option = cmdline_menu.read_selection()
-        match cookies_option:
-            case 1:
-                filename = "cookies"
-                cmdline_menu.clear_cmdline_x10()
-                cmdline_menu.clear_cmdline_x10()
-                cmdline_menu.drawBorder(menuType , borderStyle)
-                cmdline_menu.singlespace()
-                cmdline_menu.singlespace()
-                cmdline_menu.raw_text("cookies.txt已覆盖")
-                cmdline_menu.singlespace()
-                cmdline_menu.singlespace()
-                cmdline_menu.singlespace()
-                cmdline_menu.singlespace()
-                cmdline_menu.drawBorder(menuType , borderStyle)
-            case 0:
-                cmdline_menu.clear_cmdline_x10()
-                cmdline_menu.clear_cmdline_x10()
-                filename = input("请输入cookies文件名:")
+        filename = input("请输入cookies文件名:")
         ck_write = open(filename+".txt", "w")
         ck_write.write(cookie)
     return cookie

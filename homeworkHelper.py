@@ -26,18 +26,29 @@ class homeworkHelper:
             "homework": 6,
             "exam": 5,
             "recommend": 3,
-            "discussion": 4
+            "discussion": 4,
         }
 
     def do_homework(self, classroom_id, course_sign, course_name):
         # 获取每个作业的id
-        submit_url = "https://"+self.domain + \
-            "/mooc-api/v1/lms/exercise/problem_apply/?term=latest&uv_id=" + self.university_id + ""
-        get_homework_ids = "https://"+self.domain+"/mooc-api/v1/lms/learn/course/chapter?cid=" + \
-            str(classroom_id)+"&term=latest&uv_id=" + \
-            self.university_id+"&sign="+course_sign
-        homework_ids_response = requests.get(
-            url=get_homework_ids, headers=self.headers)
+        submit_url = (
+            "https://"
+            + self.domain
+            + "/mooc-api/v1/lms/exercise/problem_apply/?term=latest&uv_id="
+            + self.university_id
+            + ""
+        )
+        get_homework_ids = (
+            "https://"
+            + self.domain
+            + "/mooc-api/v1/lms/learn/course/chapter?cid="
+            + str(classroom_id)
+            + "&term=latest&uv_id="
+            + self.university_id
+            + "&sign="
+            + course_sign
+        )
+        homework_ids_response = requests.get(url=get_homework_ids, headers=self.headers)
         homework_json = json.loads(homework_ids_response.text)
         homework_ids = []
         try:
@@ -46,35 +57,53 @@ class homeworkHelper:
                     if "leaf_list" in j:
                         for z in j["leaf_list"]:
                             # print(z['leaf_type'], z['name'], z['id'])
-                            if z['leaf_type'] == self.leaf_type["homework"]:
-                                print(z['name'], z['leaf_type'],
-                                      self.leaf_type["homework"], z['id'])
+                            if z["leaf_type"] == self.leaf_type["homework"]:
+                                print(
+                                    z["name"],
+                                    z["leaf_type"],
+                                    self.leaf_type["homework"],
+                                    z["id"],
+                                )
                                 homework_ids.append(z["id"])
                     else:
-                        if j['leaf_type'] == self.leaf_type["homework"]:
+                        if j["leaf_type"] == self.leaf_type["homework"]:
                             homework_ids.append(j["id"])
-            print("| INFO | " + course_name+"共有"+str(len(homework_ids))+"个作业喔！")
+            print(course_name + "共有" + str(len(homework_ids)) + "个作业喔！")
         except:
-            print("| FATAL | 获取作业id时出现问题!!! 请重新运行此程序!")
+            print("fail while getting homework_ids!!! please re-run this program!")
             raise Exception(
-                "获取作业id时出现问题!!! 请重新运行此程序!")
+                "fail while getting homework_ids!!! please re-run this program!"
+            )
 
         # finally, we have all the data needed
         for homework in homework_ids:
-            get_leaf_type_id_url = "https://"+self.domain+"/mooc-api/v1/lms/learn/leaf_info/" + \
-                str(classroom_id)+"/"+str(homework)+"/?term=latest&uv_id=3078"
-            leaf_response = requests.get(
-                url=get_leaf_type_id_url, headers=self.headers)
+            get_leaf_type_id_url = (
+                "https://"
+                + self.domain
+                + "/mooc-api/v1/lms/learn/leaf_info/"
+                + str(classroom_id)
+                + "/"
+                + str(homework)
+                + "/?term=latest&uv_id=3078"
+            )
+            leaf_response = requests.get(url=get_leaf_type_id_url, headers=self.headers)
             try:
-                leaf_id = json.loads(leaf_response.text)[
-                    "data"]["content_info"]["leaf_type_id"]
+                leaf_id = json.loads(leaf_response.text)["data"]["content_info"][
+                    "leaf_type_id"
+                ]
             except:
                 continue
-            problem_url = "https://"+self.domain+"/mooc-api/v1/lms/exercise/get_exercise_list/" + \
-                str(leaf_id)+"/?term=latest&uv_id="+self.university_id
+            problem_url = (
+                "https://"
+                + self.domain
+                + "/mooc-api/v1/lms/exercise/get_exercise_list/"
+                + str(leaf_id)
+                + "/?term=latest&uv_id="
+                + self.university_id
+            )
             id_response = requests.get(url=problem_url, headers=self.headers)
             dictionary = json.loads(id_response.text)
-            font_ttf = dictionary['data']['font']
+            font_ttf = dictionary["data"]["font"]
             decrypt = Decrypt_problem(header=self.headers)
             decrypted_str = decrypt.get_encrypt_string(id_response.text, font_ttf)
             dictionary = json.loads(decrypted_str)
@@ -83,28 +112,28 @@ class homeworkHelper:
             for problem in dictionary["data"]["problems"]:
                 problem_id = problem["problem_id"]  # 提取题目ID作为键
                 content = problem["content"]
-                if problem['user']['my_count'] >= problem['user']['count']:
-                    print("| WARN | " +"该问题已经超过做题上限了，所以不得不跳过啦~")
+                if problem["user"]["my_count"] >= problem["user"]["count"]:
+                    print("该问题已经超过做题上限了，所以不得不跳过啦~")
                     continue
                 options = [
-                    f"{opt['key']}. {opt['value']}" for opt in content["Options"]]
+                    f"{opt['key']}. {opt['value']}" for opt in content["Options"]
+                ]
                 # 构建值字符串（不再需要包含ID）
                 question_str = f"[{content['TypeText']}]{content['Body']} 选项：[{', '.join(options)}]"
                 questions_dict[problem_id] = question_str  # 存入字典
 
             # 回答问题
             for pid, q in questions_dict.items():
-                print("| INFO | " + f"问题: {q}")
+                print(f"问题: {q}")
 
                 openai_solve = OpenAI_ask()
                 answer = openai_solve.get_answer(q)
                 submit_dict = {
                     "classroom_id": classroom_id,
                     "problem_id": pid,
-                    "answer": answer
+                    "answer": answer,
                 }
                 submit_json_data = json.dumps(submit_dict)
-                print(submit_json_data)
                 retries = 0
                 while retries < 3:  # 添加重试循环，限制最大重试次数
                     try:
@@ -112,29 +141,48 @@ class homeworkHelper:
                             url=submit_url,
                             headers=self.headers,
                             data=submit_json_data,
-                            timeout=(3, 10)
+                            timeout=(3, 10),
                         )
                         response_json = json.loads(response.text)  # 解析 JSON 响应
 
-                        if 'detail' in response_json and "Expected available in" in response_json['detail']:
+                        if (
+                            "detail" in response_json
+                            and "Expected available in" in response_json["detail"]
+                        ):
                             delay_match = re.search(
-                                r'Expected available in (\d+\.?\d*) seconds\.', response_json['detail'])
+                                r"Expected available in (\d+\.?\d*) seconds\.",
+                                response_json["detail"],
+                            )
                             if delay_match:
                                 delay_time = float(delay_match.group(1))
-                                print("| WARN | " +f"由于网络阻塞，万恶的雨课堂，要阻塞 {delay_time} 秒")
-                                time.sleep(delay_time + 1)  # 等待指定时间 + 1 秒，更保险
+                                print(
+                                    f"由于网络阻塞，万恶的雨课堂，要阻塞 {delay_time} 秒"
+                                )
+                                time.sleep(
+                                    delay_time + 1
+                                )  # 等待指定时间 + 1 秒，更保险
                                 retries += 1
-                                print("| WARN | " +f"等待结束，进行第 {retries} 次重试...")
+                                print(f"等待结束，进行第 {retries} 次重试...")
                                 continue  # 继续下一次循环，即重试提交
-
-                        print(response.text)  # 打印正常响应
+                        result_info = json.loads(response.text)
+                        if result_info["msg"] == "you do not have chance to answer":
+                            print("该题没有答题机会了")
+                        else:
+                            print(
+                                "该问题得分为：",
+                                result_info["data"]["score"],
+                                "作答结果为：",
+                                result_info["data"]["is_right"],
+                            )
                         break  # 提交成功，跳出重试循环
 
                     except requests.exceptions.Timeout as e:
-                        print("| WARN | " +f"请求超时，第{retries+1}次重试...")
+                        print(f"请求超时，第{retries+1}次重试...")
                         retries += 1
-                        time.sleep(2 ** retries)  # 指数退避
-                    except requests.exceptions.RequestException as e:  # 捕获其他请求异常
-                        print("| ERROR |" +f"请求异常: {str(e)}")
+                        time.sleep(2**retries)  # 指数退避
+                    except (
+                        requests.exceptions.RequestException
+                    ) as e:  # 捕获其他请求异常
+                        print(f"请求异常: {str(e)}")
                         break  # 遇到其他请求异常，跳出重试循环，避免无限重试
-            print("| INFO | " + dictionary["data"]["name"] + "已经完成!")
+            print(dictionary["data"]["name"] + "已经完成!")

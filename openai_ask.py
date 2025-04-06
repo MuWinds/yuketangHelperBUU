@@ -14,7 +14,7 @@ class OpenAI_ask:
         response = client.chat.completions.create(
             model=self.model,
             messages=[
-                {"role": "system", "content": ""},
+                {"role": "system", "content": "回答下面的问题,直接返回答案对应选项的字母,不要回复多余内容,如果不知道答案,请直接回答C,多选题回答格式是每个选项之间用一个半角逗号和一个空格分开，判断题只用返回true或false，不用回复标点符号。"},
                 {"role": "user", "content": problem},
             ],
             temperature=0.7,

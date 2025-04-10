@@ -112,7 +112,6 @@ if __name__ == "__main__":
                 )
             for ins in courses:
                 homework_helper.do_homework(
-                    submit_url,
                     ins["classroom_id"],
                     ins["course_sign"],
                     ins["course_name"],

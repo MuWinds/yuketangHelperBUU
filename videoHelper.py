@@ -210,7 +210,6 @@ class videoHelper:
                     classroom_id,
                     sku_id,
                 ),
-                deamon=True,
             )
             thread.start()
             threads.append(thread)

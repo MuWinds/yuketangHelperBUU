@@ -165,16 +165,19 @@ class homeworkHelper:
                                 print(f"等待结束，进行第 {retries} 次重试...")
                                 continue  # 继续下一次循环，即重试提交
                         result_info = json.loads(response.text)
-                        if result_info["msg"] == "you do not have chance to answer":
-                            print("该题没有答题机会了")
-                        else:
-                            print(
-                                "该问题得分为：",
-                                result_info["data"]["my_score"],
-                                "作答结果为：",
-                                result_info["data"]["is_right"],
-                            )
-                        break  # 提交成功，跳出重试循环
+                        try:
+                            if result_info["msg"] == "you do not have chance to answer":
+                                print("该题没有答题机会了")
+                            else:
+                                print(
+                                    "该问题得分为：",
+                                    result_info["data"]["score"],
+                                    "作答结果为：",
+                                    result_info["data"]["is_right"],
+                                )
+                            break  # 提交成功，跳出重试循环
+                        except:
+                            print(result_info)
 
                     except requests.exceptions.Timeout as e:
                         print(f"请求超时，第{retries+1}次重试...")

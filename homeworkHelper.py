@@ -170,7 +170,7 @@ class homeworkHelper:
                         else:
                             print(
                                 "该问题得分为：",
-                                result_info["data"]["score"],
+                                result_info["data"]["my_score"],
                                 "作答结果为：",
                                 result_info["data"]["is_right"],
                             )

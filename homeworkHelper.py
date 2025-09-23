@@ -112,28 +112,37 @@ class homeworkHelper:
             for problem in dictionary["data"]["problems"]:
                 problem_id = problem["problem_id"]  # 提取题目ID作为键
                 content = problem["content"]
+                
                 if problem["user"]["my_count"] >= problem["user"]["count"]:
                     print("该问题已经超过做题上限了，所以不得不跳过啦~")
                     continue
-                options = [
-                    f"{opt['key']}. {opt['value']}" for opt in content["Options"]
-                ]
-                # 构建值字符串（不再需要包含ID）
-                question_str = f"[{content['TypeText']}]{content['Body']} 选项：[{', '.join(options)}]"
+                if content["Type"] != 'FillBlank':  # 填空题
+                    options = [
+                        f"{opt['key']}. {opt['value']}" for opt in content["Options"]
+                    ]
+                    # 构建值字符串（不再需要包含ID）
+                    questions_info = {"Type": content["Type"], "Body": content["Body"], "Options": options}
+                else:  # 填空题
+                    questions_info = {"Type": content["Type"], "Body": content["Body"]}
+                question_str = json.dumps(questions_info, ensure_ascii=False)
                 questions_dict[problem_id] = question_str  # 存入字典
 
             # 回答问题
             for pid, q in questions_dict.items():
                 print(f"问题: {q}")
-
+                content = json.loads(q)
                 openai_solve = OpenAI_ask()
-                answer = openai_solve.get_answer(q)
+                answer = openai_solve.get_answer(q,problem_type=content["Type"])
                 submit_dict = {
                     "classroom_id": classroom_id,
                     "problem_id": pid,
-                    "answer": answer,
                 }
+                if content["Type"] == "FillBlank":
+                    submit_dict["answers"] = json.loads(answer)
+                else:
+                    submit_dict["answer"] = answer
                 submit_json_data = json.dumps(submit_dict)
+                print(f"答案: {answer}")
                 retries = 0
                 while retries < 3:  # 添加重试循环，限制最大重试次数
                     try:
@@ -164,20 +173,16 @@ class homeworkHelper:
                                 retries += 1
                                 print(f"等待结束，进行第 {retries} 次重试...")
                                 continue  # 继续下一次循环，即重试提交
-                        result_info = json.loads(response.text)
-                        try:
-                            if result_info["msg"] == "you do not have chance to answer":
-                                print("该题没有答题机会了")
-                            else:
-                                print(
-                                    "该问题得分为：",
-                                    result_info["data"]["score"],
-                                    "作答结果为：",
-                                    result_info["data"]["is_right"],
-                                )
-                            break  # 提交成功，跳出重试循环
-                        except:
-                            print(result_info)
+                        print(response_json)    
+                        if response_json["msg"] != "":
+                            print("该题没有答题")
+                            print("错误信息为：", response_json["msg"])
+                        else:
+                            print(
+                                "该回答得分为：",
+                                response_json["data"]["my_score"]
+                            )
+                        break  # 提交成功，跳出重试循环                            
 
                     except requests.exceptions.Timeout as e:
                         print(f"请求超时，第{retries+1}次重试...")

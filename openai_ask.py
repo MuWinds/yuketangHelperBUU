@@ -10,7 +10,7 @@ class OpenAI_ask:
         self.system_prompt = self.config["system_prompt"]
         self.model = self.config["model"]
 
-    def get_answer(self, problem):
+    def get_answer(self, problem,problem_type='Choice'):
         client = OpenAI(api_key=self.api_key, base_url=self.base_url)
         response = client.chat.completions.create(
             model=self.model,
@@ -23,7 +23,7 @@ class OpenAI_ask:
             ],
             temperature=0.7,
         )
-        if len(response.choices[0].message.content) == 1:
+        if len(response.choices[0].message.content) == 1 or problem_type == 'FillBlank':
             result = response.choices[0].message.content
         else:
             result = [

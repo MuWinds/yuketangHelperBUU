@@ -139,7 +139,7 @@ class homeworkHelper:
                     continue
                 if content["Type"] != 'FillBlank':  # 填空题
                     options = [
-                        f"{opt['key']}. {opt['value']}" for opt in content["Options"]
+                        f"{opt['key']}. {opt['value']}" for opt in content.get("Options", [])
                     ]
                     # 构建值字符串（不再需要包含ID）
                     questions_info = {"Type": content["Type"], "Body": content["Body"], "Options": options}

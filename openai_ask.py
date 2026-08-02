@@ -37,7 +37,15 @@ class OpenAI_ask:
         nothink_content = re.sub(r'<think>.*?</think>', '', full_content, flags=re.DOTALL).strip()
 
         # 3. 基于清洗后的内容进行原有逻辑判断
-        if len(nothink_content) == 1 or problem_type == 'FillBlank' or leaf_type == 4:
+        # FillBlank 保留为字符串以便 homeworkHelper 走 json.loads
+        # 讨论 (leaf_type==4) 也保留为字符串原文使用
+        # SingleChoice "C" / Judgement "true"/"false" / Essay 长文本：无逗号 → 字符串
+        # MultipleChoice "A, B"：含逗号 → 列表
+        if (
+            problem_type == "FillBlank"
+            or leaf_type == 4
+            or "," not in nothink_content
+        ):
             result = nothink_content
         else:
             result = [

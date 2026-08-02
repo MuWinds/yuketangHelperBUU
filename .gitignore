@@ -130,3 +130,6 @@ dmypy.json
 *.txt
 openai_test.py
 config.json
+
+# pi coding agent local config
+.pi/

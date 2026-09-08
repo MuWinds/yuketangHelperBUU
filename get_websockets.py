@@ -6,7 +6,9 @@ import websocket
 import threading
 import qrcode
 import os
-import io
+import sys
+import subprocess
+import tempfile
 
 
 class WebSocketQrcode:
@@ -74,16 +76,21 @@ def print_qrcode(qr_data):
 
     img = qr.make_image(fill='black', back_color='white')
 
-    # 将二维码图像保存到内存
-    img_buffer = io.BytesIO()
-    img.save(img_buffer, format='PNG')
-    img_buffer.seek(0)
+    # 保存二维码图片到临时文件
+    qr_file = os.path.join(tempfile.gettempdir(), "yuketang_qrcode.png")
+    img.save(qr_file, format='PNG')
 
-    # 打印二维码
+    # 清屏并打印扫码链接
     os.system('cls' if os.name == 'nt' else 'clear')  # 清屏
     print("QRCode:")
-    qr.print_ascii(invert=True) # 在命令行输出二维码
-    try :
-        img.show()  
-    except:
-        print("无法显示二维码，可以用链接自己生成二维码：", qr_data)
+    print("扫码链接：" + qr_data)
+    try:
+        # 用系统默认图片查看器打开二维码图片文件
+        if os.name == 'nt':
+            os.startfile(qr_file)
+        elif sys.platform == 'darwin':
+            subprocess.call(['open', qr_file])
+        else:
+            subprocess.call(['xdg-open', qr_file])
+    except Exception as e:
+        print("无法自动打开二维码图片，请手动打开文件：", qr_file)

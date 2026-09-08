@@ -24,6 +24,21 @@ class videoHelper:
         self.university_id = university_id
         self.headers = header
 
+    def _request_with_retry(self, method, url, max_retries=3, timeout=10, **kwargs):
+        """带超时和重试的请求，网络波动时自动重试，避免刷课中断"""
+        for attempt in range(1, max_retries + 1):
+            try:
+                return requests.request(method, url, timeout=timeout, **kwargs)
+            except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+                print(
+                    f"请求失败（{method} {url}），第 {attempt}/{max_retries} 次重试中：{e}"
+                )
+                if attempt < max_retries:
+                    time.sleep(2 * attempt)
+        raise requests.exceptions.RequestException(
+            f"请求失败（{method} {url}），已重试 {max_retries} 次仍失败"
+        )
+
     def one_video_watcher(self, video_id, video_name, cid, user_id, classroomid, skuid):
         video_id = str(video_id)
         classroomid = str(classroomid)
@@ -43,7 +58,7 @@ class videoHelper:
             + self.university_id
             + ""
         )
-        progress = requests.get(url=get_url, headers=self.headers)
+        progress = self._request_with_retry("GET", get_url, headers=self.headers)
         if_completed = "0"
         try:
             if_completed = re.search(r'"completed":(.+?),', progress.text).group(1)
@@ -106,7 +121,9 @@ class videoHelper:
                 )
                 video_frame += self.learning_rate
             data = {"heart_data": heart_data}
-            r = requests.post(url=url, headers=self.headers, json=data, timeout=5)
+            r = self._request_with_retry(
+                "POST", url, headers=self.headers, json=data
+            )
             heart_data = []
             try:
                 delay_time = (
@@ -124,11 +141,15 @@ class videoHelper:
                     + self.university_id
                     + ""
                 )
-                r = requests.post(url=submit_url, headers=self.headers, data=data)
+                r = self._request_with_retry(
+                    "POST", submit_url, headers=self.headers, data=data
+                )
             except:
                 pass
             try:
-                progress = requests.get(url=get_url, headers=self.headers)
+                progress = self._request_with_retry(
+                    "GET", get_url, headers=self.headers
+                )
                 res_rate = json.loads(progress.text)
                 tmp_rate = res_rate["data"][video_id]["rate"]
                 if tmp_rate is None:
@@ -158,7 +179,9 @@ class videoHelper:
             + "&sign="
             + course_sign
         )
-        homework_ids_response = requests.get(url=get_homework_ids, headers=self.headers)
+        homework_ids_response = self._request_with_retry(
+            "GET", get_homework_ids, headers=self.headers
+        )
         homework_json = json.loads(homework_ids_response.text)
         homework_dic = {}
         try:
